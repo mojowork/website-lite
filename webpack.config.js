@@ -23,7 +23,21 @@ module.exports = {
                         loader:'style-loader'
                     },
                     use: [{
-                        loader:'css-loader'
+                        loader:'css-loader',
+                        options: {
+                            minimize: true
+                        }
+                    },{
+                        loader: 'postcss-loader',
+                        options: {
+                            ident: 'postcss',
+                            plugins: [
+                                require('postcss-sprites')({
+                                    spritePath: 'dist/assets/imgs/sprites'
+                                }),
+                                require('autoprefixer')()
+                            ]
+                        }
                     }]
                 })
             },{
@@ -32,8 +46,27 @@ module.exports = {
                     loader: 'babel-loader'
                 },
                 exclude: '/node_modules/'
-            }
-            ]
+            },{
+                test: /\.(png|jpe?g|gif)$/,
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 500,
+                        name: '[name].min.[ext]',
+                        publicPath: '',
+                        outputPath: '',
+                        useRelativePath: true
+                    }
+                },{
+                    loader: 'img-loader',
+                    options: {
+                        pngquant: {
+                            quality: 80
+                        }
+                    }
+                }]
+
+            }]
     },
     plugins: [
         new ExtractTextPlugin('[name]-[hash:5].css')

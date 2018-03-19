@@ -1,6 +1,18 @@
 
 .my{
-  background-color: green;
+  background: url('../assets/imgs/manhua.png');
+  transform: rotateX(10);
+  border-radius: 5px;
+}
+
+.my1{
+  background: url('../assets/imgs/manhua.1.png');
+  transform: rotateX(10);
+  border-radius: 5px;
+}
+
+.my2{
+  background: url('../assets/imgs/manhua.2.png');
   transform: rotateX(10);
   border-radius: 5px;
 }
