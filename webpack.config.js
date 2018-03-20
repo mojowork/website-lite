@@ -14,10 +14,13 @@ const   webpack = require('webpack'),
 
 module.exports = {
     entry: {
-        index: './src/pages/index.js'
+        index: './src/pages/index.js',
+        page1: './src/pages/page1/index.js',
+        vendor: ['lodash']
     },
     output: {
         filename: '[name]-[hash:5].js',
+        chunkFilename: '[name].chunk.js',
         publicPath: '/',
         path: path.resolve(__dirname, 'dist')
     },
@@ -96,7 +99,17 @@ module.exports = {
             // Give paths to parse for rules. These should be absolute!
             paths: glob.sync(path.join(__dirname, './src/pages/*.html')),
         }),
-        new webpack.optimize.UglifyJsPlugin(), // js tree shaking
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'common',
+            minChunks: 2,
+            chunks: ['index','page1']
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            names: ['vendor', 'manifest'],
+            minChunks: Infinity
+        }),
+
+        // new webpack.optimize.UglifyJsPlugin(), // js tree shaking
         new webpack.HotModuleReplacementPlugin(), // hot loading
         new webpack.NamedModulesPlugin(), // out path
         new HtmlWebpackPlugin({
