@@ -101,7 +101,7 @@ module.exports = {
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'common',
-            minChunks: 2,
+            minChunks: 3,
             chunks: ['index','page1']
         }),
         new webpack.optimize.CommonsChunkPlugin({
