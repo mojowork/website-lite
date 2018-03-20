@@ -16,6 +16,7 @@ module.exports = {
     },
     output: {
         filename: '[name]-[hash:5].js',
+        publicPath: '/',
         path: path.resolve(__dirname, 'dist')
     },
     module:{
@@ -59,9 +60,9 @@ module.exports = {
                     options: {
                         limit: 500,
                         name: '[name].min.[ext]',
+                        useRelativePath: true,
                         publicPath: '',
-                        outputPath: '',
-                        useRelativePath: true
+                        outputPath: 'dist/'
                     }
                 },{
                     loader: 'img-loader',
@@ -87,6 +88,8 @@ module.exports = {
         new webpack.ProvidePlugin({
             $: 'jquery'
         }),
+        new webpack.HotModuleReplacementPlugin(), // hot
+        new webpack.NamedModulesPlugin(), // out path
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: 'src/pages/index.html',
@@ -102,6 +105,16 @@ module.exports = {
         }
     },
     devServer: {
-        port: 2018
+        port: 2018,
+        hot: true,
+        contentBase: '/dist',
+        proxy: {
+            '/api': {
+                target: 'locahost:3000',
+                changeOrigin: true,
+                // headers:{},
+                logLevel: 'debug',
+            }
+        }
     }
 };
