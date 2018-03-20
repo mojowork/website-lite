@@ -3,7 +3,11 @@
 * @Date:   2018-03-16 18:10:19
 */
 
-const   path = require('path'),
+const   webpack = require('webpack'),
+        path = require('path'),
+
+        // plugin
+        HtmlWebpackPlugin = require('html-webpack-plugin'),
         ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
@@ -17,7 +21,7 @@ module.exports = {
     module:{
         rules: [
             {
-                test: /\.css$/,
+                test: /\.less$/,
                 use: ExtractTextPlugin.extract({
                     fallback: {
                         loader:'style-loader'
@@ -25,7 +29,7 @@ module.exports = {
                     use: [{
                         loader:'css-loader',
                         options: {
-                            minimize: true
+                            // minimize: true
                         }
                     },{
                         loader: 'postcss-loader',
@@ -38,6 +42,8 @@ module.exports = {
                                 require('autoprefixer')()
                             ]
                         }
+                    },{
+                        loader: 'less-loader'
                     }]
                 })
             },{
@@ -69,9 +75,25 @@ module.exports = {
             }]
     },
     plugins: [
-        new ExtractTextPlugin('[name]-[hash:5].css')
+        new ExtractTextPlugin('[name]-[hash:5].css'),
+        new webpack.ProvidePlugin({
+            $: 'jquery'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: 'src/pages/index.html',
+            chunks: ['index'],
+            minify: {
+                collapseWhitespace: true
+            }
+        })
     ],
+    resolve: {
+        alias:{
+            pages: path.resolve(__dirname, 'src/pages')
+        }
+    },
     devServer: {
-        port:2018
+        port: 2018
     }
 };

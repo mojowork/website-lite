@@ -1,4 +1,4 @@
-import './index.css'
+import './index.less'
 
 function* foo(x) {
     yield x + 1;
