@@ -5,10 +5,12 @@
 
 const   webpack = require('webpack'),
         path = require('path'),
-
+        glob = require('glob-all'),
         // plugin
         HtmlWebpackPlugin = require('html-webpack-plugin'),
-        ExtractTextPlugin = require('extract-text-webpack-plugin');
+        CleanWebpackPlugin = require('clean-webpack-plugin'),
+        ExtractTextPlugin = require('extract-text-webpack-plugin'),
+        PurifyCSSPlugin = require('purifycss-webpack');
 
 module.exports = {
     entry: {
@@ -84,11 +86,18 @@ module.exports = {
             }]
     },
     plugins: [
-        new ExtractTextPlugin('[name]-[hash:5].css'),
+
+        new CleanWebpackPlugin(['dist']), //clean dist dir
         new webpack.ProvidePlugin({
             $: 'jquery'
         }),
-        new webpack.HotModuleReplacementPlugin(), // hot
+        new ExtractTextPlugin('[name]-[hash:5].css'),
+        new PurifyCSSPlugin({
+            // Give paths to parse for rules. These should be absolute!
+            paths: glob.sync(path.join(__dirname, './src/pages/*.html')),
+        }),
+        new webpack.optimize.UglifyJsPlugin(), // js tree shaking
+        new webpack.HotModuleReplacementPlugin(), // hot loading
         new webpack.NamedModulesPlugin(), // out path
         new HtmlWebpackPlugin({
             filename: 'index.html',
