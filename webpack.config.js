@@ -72,6 +72,14 @@ module.exports = {
                     }
                 }]
 
+            },{
+                test: /\.(html|ejs)$/,
+                use: {
+                    loader: 'html-loader',
+                    options: {
+                        attrs: ['img:src']
+                    }
+                }
             }]
     },
     plugins: [
